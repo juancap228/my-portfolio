@@ -1,23 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { loadSlim } from "@tsparticles/slim";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 
-export const CoverParticles = () => {
+interface Obstacle {
+    x: number;
+    y: number;
+    radius: number;
+}
+
+export const CoverParticles = ({ collisionEnabled = false, obstacles = [] }: { collisionEnabled: boolean; obstacles: Obstacle[] }) => {
     const [init, setInit] = useState(false);
 
-    useEffect(() => {
-        initParticlesEngine(async (engine) => {
+    const initEngine = useCallback(async () => {
+        await initParticlesEngine(async (engine) => {
             await loadSlim(engine);
-        }).then(() => {
-            setInit(true);
         });
+        setInit(true);
     }, []);
+
+    useEffect(() => {
+        initEngine();
+    }, [initEngine]);
 
     return (
         init && (
-            <div className="w-[0px]">
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
                 <Particles
                     id="tsparticles"
                     options={{
@@ -29,7 +38,7 @@ export const CoverParticles = () => {
                             },
                             modes: {
                                 push: { quantity: 4 },
-                                repulse: { distance: 200, duration: 0.4 },
+                                repulse: { distance: 150, duration: 0.4 },
                             },
                         },
                         particles: {
@@ -40,10 +49,7 @@ export const CoverParticles = () => {
                             move: {
                                 enable: true,
                                 speed: 1,
-                                direction: "none",
-                                random: false,
-                                straight: false,
-                                outModes: { default: "out" },
+                                outModes: { default: collisionEnabled ? "bounce" : "out" },
                             },
                             shape: {
                                 type: "image",
@@ -67,13 +73,23 @@ export const CoverParticles = () => {
                                 value: 1,
                             },
                             links: {
-                                enable: true, // Habilitar las conexiones entre partículas
-                                distance: 200, // Distancia máxima para conectar partículas
-                                color: "#ffffff", // Color de las líneas
-                                opacity: 0.9, // Opacidad de las líneas
-                                width: 3, // Grosor de las líneas
+                                enable: true,
+                                distance: 200,
+                                color: "#ffffff",
+                                opacity: 0.9,
+                                width: 3,
+                            },
+                            collisions: {
+                                enable: collisionEnabled,
                             },
                         },
+                        absorbers: collisionEnabled && obstacles.length > 0
+                            ? obstacles.map((obs) => ({
+                                  position: { x: obs.x, y: obs.y },
+                                  size: obs.radius,
+                                  opacity: 1, // Visible para pruebas, puedes poner 0
+                              }))
+                            : [],
                         detectRetina: true,
                     }}
                 />
