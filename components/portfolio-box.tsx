@@ -1,20 +1,25 @@
-import Image from "next/image";
 import Link from "next/link";
 
+interface ProjectData {
+    id: number;
+    title: string;
+    image: string;
+    urlGithub: string;
+    urlDemo: string;
+    description?: string;
+    images?: string[];
+    technologies?: string[];
+}
+
 interface PortfolioBoxProps {
-    data: {
-        id: number;
-        title: string;
-        image: string;
-        urlGithub: string;
-        urlDemo: string;
-    };
+    data: ProjectData;
     setActiveImage: (image: string) => void;
+    onViewDescription: (data: ProjectData) => void;
 }
 
 
 
-const PortfolioBox = ({ data, setActiveImage }: PortfolioBoxProps) => {
+const PortfolioBox = ({ data, setActiveImage, onViewDescription }: PortfolioBoxProps) => {
     const { id, title, image } = data;
 
     // Número de WhatsApp y mensaje prellenado
@@ -32,7 +37,7 @@ const PortfolioBox = ({ data, setActiveImage }: PortfolioBoxProps) => {
             onMouseLeave={() => setActiveImage("/icons/PruebaPortfolio-Remaster.png")}
         >
             {/* Título con altura fija para evitar desalineaciones */}
-            <h3 className="mb-4 text-xl min-h-[60px] flex items-center justify-center">
+            <h3 className="mb-4 text-xl min-h-[60px] flex items-center justify-center select-none">
                 {title}
             </h3>
 
@@ -44,12 +49,18 @@ const PortfolioBox = ({ data, setActiveImage }: PortfolioBoxProps) => {
                 ></div>
             </div>
 
-            {/* Botón alineado uniformemente */}
-            <div className="mt-auto pt-4">
+            {/* Botones alineados uniformemente */}
+            <div className="mt-auto pt-4 flex flex-col gap-2 w-full">
+                <button
+                    onClick={() => onViewDescription(data)}
+                    className="p-3 transition duration-150 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold w-full"
+                >
+                    Ver Descripción
+                </button>
                 <Link
                     href={whatsappUrl}
                     target="_blank"
-                    className="p-3 transition duration-150 rounded-lg bg-green-500 hover:bg-orange-600 text-white font-semibold"
+                    className="p-3 transition duration-150 rounded-lg bg-green-500 hover:bg-orange-600 text-white font-semibold block"
                 >
                     Solicitar Demo
                 </Link>

@@ -1,17 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 
 import { dataPortfolio } from "@/data";
 import CircleImage from "@/components/circle-image";
 import TransitionPage from "@/components/transition-page";
 import ContainerPage from "@/components/container-page";
 import PortfolioBox from "@/components/portfolio-box";
+import ProjectModal from "@/components/project-modal";
 
 const PortfolioPage = () => {
-    const [activeImage, setActiveImage] = useState("/icons/PruebaPortfolio-Remaster.png"); // Imagen por defecto
+    const [activeImage, setActiveImage] = useState("/icons/PruebaPortfolio-Remaster.png");
+    const [selectedProject, setSelectedProject] = useState<typeof dataPortfolio[0] | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleViewDescription = (project: typeof dataPortfolio[0]) => {
+        setSelectedProject(project);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setTimeout(() => setSelectedProject(null), 300);
+    };
 
     return (
         <ContainerPage>
@@ -24,10 +35,21 @@ const PortfolioPage = () => {
 
                 <div className="relative z-10 grid max-w-5xl gap-6 mx-auto mt-4 md:grid-cols-4">
                     {dataPortfolio.map((data) => (
-                        <PortfolioBox key={data.id} data={data} setActiveImage={setActiveImage} />
+                        <PortfolioBox
+                            key={data.id}
+                            data={data}
+                            setActiveImage={setActiveImage}
+                            onViewDescription={handleViewDescription}
+                        />
                     ))}
                 </div>
             </div>
+
+            <ProjectModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                project={selectedProject}
+            />
         </ContainerPage>
     );
 };

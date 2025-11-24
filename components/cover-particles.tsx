@@ -17,14 +17,14 @@ export const CoverParticles = () => {
 
     return (
         init && (
-            <div className="w-[0px]">
+            <div className="w-[0px] pointer-events-none fixed inset-0 z-0">
                 <Particles
                     id="tsparticles"
                     options={{
                         fpsLimit: 120,
                         interactivity: {
                             events: {
-                                onClick: { enable: true, mode: "push" },
+                                onClick: { enable: false, mode: "push" },
                                 onHover: { enable: true, mode: "repulse" },
                             },
                             modes: {
