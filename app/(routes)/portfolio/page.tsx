@@ -9,12 +9,30 @@ import ContainerPage from "@/components/container-page";
 import PortfolioBox from "@/components/portfolio-box";
 import ProjectModal from "@/components/project-modal";
 
+interface ProjectData {
+    id: number;
+    title: string;
+    subtitle?: string;
+    image: string;
+    urlGithub: string;
+    urlDemo: string;
+    context?: string;
+    problem?: string;
+    solution?: string;
+    features?: string[];
+    results?: string[];
+    challenges?: string[];
+    description?: string;
+    images?: string[];
+    technologies?: string[];
+}
+
 const PortfolioPage = () => {
     const [activeImage, setActiveImage] = useState("/icons/PruebaPortfolio-Remaster.png");
-    const [selectedProject, setSelectedProject] = useState<typeof dataPortfolio[0] | null>(null);
+    const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleViewDescription = (project: typeof dataPortfolio[0]) => {
+    const handleViewDescription = (project: ProjectData) => {
         setSelectedProject(project);
         setIsModalOpen(true);
     };

@@ -3,9 +3,16 @@ import Link from "next/link";
 interface ProjectData {
     id: number;
     title: string;
+    subtitle?: string;
     image: string;
     urlGithub: string;
     urlDemo: string;
+    context?: string;
+    problem?: string;
+    solution?: string;
+    features?: string[];
+    results?: string[];
+    challenges?: string[];
     description?: string;
     images?: string[];
     technologies?: string[];
